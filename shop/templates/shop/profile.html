@@ -1,0 +1,45 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center py-3">
+                <h4 class="mb-0"><i class="bi bi-person-gear"></i> Редактирование профиля</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold"><i class="bi bi-person-badge"></i> Роль</label>
+                        <input type="text" class="form-control" value="{{ profile_user.role.name }}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold"><i class="bi bi-envelope"></i> Логин</label>
+                        <input type="text" class="form-control" value="{{ profile_user.login }}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="full_name" class="form-label fw-semibold"><i class="bi bi-person"></i> ФИО</label>
+                        <input type="text" class="form-control" id="full_name" name="full_name" value="{{ profile_user.full_name }}">
+                    </div>
+                    <hr>
+                    <h6 class="text-muted mb-3"><i class="bi bi-key"></i> Смена пароля</h6>
+                    <div class="mb-3">
+                        <label for="new_password" class="form-label fw-semibold">Новый пароль</label>
+                        <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Оставьте пустым, если не меняете">
+                    </div>
+                    <div class="mb-4">
+                        <label for="confirm_password" class="form-label fw-semibold">Подтвердите пароль</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Повторите новый пароль">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        <i class="bi bi-check-circle"></i> Сохранить
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

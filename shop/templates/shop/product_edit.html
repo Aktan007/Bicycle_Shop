@@ -1,0 +1,95 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Редактирование товара{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center py-3">
+                <h4 class="mb-0"><i class="bi bi-pencil-square"></i> Редактирование товара</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-semibold">Наименование</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ product.name }}" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="category" class="form-label fw-semibold">Категория</label>
+                            <select name="category" id="category" class="form-select">
+                                {% for cat in categories %}
+                                    <option value="{{ cat.id }}" {% if cat.id == product.category_id %}selected{% endif %}>{{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="supplier" class="form-label fw-semibold">Поставщик</label>
+                            <select name="supplier" id="supplier" class="form-select">
+                                {% for sup in suppliers %}
+                                    <option value="{{ sup.id }}" {% if sup.id == product.supplier_id %}selected{% endif %}>{{ sup.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="manufacturer" class="form-label fw-semibold">Производитель</label>
+                        <input type="text" class="form-control" id="manufacturer" name="manufacturer" value="{{ product.manufacturer }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label fw-semibold">Описание</label>
+                        <textarea class="form-control" id="description" name="description" rows="3">{{ product.description }}</textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="price" class="form-label fw-semibold">Цена (₽)</label>
+                            <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ product.price }}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="discount" class="form-label fw-semibold">Скидка (%)</label>
+                            <input type="number" step="0.01" class="form-control" id="discount" name="discount" value="{{ product.discount }}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="quantity" class="form-label fw-semibold">Кол-во на складе</label>
+                            <input type="number" class="form-control" id="quantity" name="quantity" value="{{ product.quantity }}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="unit" class="form-label fw-semibold">Единица измерения</label>
+                        <input type="text" class="form-control" id="unit" name="unit" value="{{ product.unit }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="image" class="form-label fw-semibold">Фото товара</label>
+                        {% if product.image_path %}
+                            <div class="mb-2">
+                                <img src="/media/products/{{ product.image_path }}" alt="{{ product.name }}" class="product-img">
+                                <small class="text-muted ms-2">{{ product.image_path }}</small>
+                            </div>
+                        {% endif %}
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                        <small class="text-muted">Оставьте пустым, чтобы не менять фото</small>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
+                            <i class="bi bi-check-circle"></i> Сохранить
+                        </button>
+                        <a href="{% url 'shop:products_list' %}" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-x-circle"></i> Отмена
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

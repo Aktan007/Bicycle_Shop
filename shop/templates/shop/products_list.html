@@ -1,0 +1,127 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Каталог товаров{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2><i class="bi bi-box-seam"></i> Каталог товаров</h2>
+    <span class="badge bg-secondary fs-6">{{ products|length }} товаров</span>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label fw-semibold"><i class="bi bi-search"></i> Поиск</label>
+                <input type="text" name="search" class="form-control" placeholder="Название товара..." value="{{ search }}">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-semibold"><i class="bi bi-percent"></i> Скидка</label>
+                <select name="discount" class="form-select">
+                    <option value="">Все</option>
+                    <option value="yes" {% if discount_filter == 'yes' %}selected{% endif %}>Со скидкой</option>
+                    <option value="no" {% if discount_filter == 'no' %}selected{% endif %}>Без скидки</option>
+                    <option value="high" {% if discount_filter == 'high' %}selected{% endif %}>Скидка ≥ 15%</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-semibold"><i class="bi bi-currency-dollar"></i> Цена</label>
+                <select name="price" class="form-select">
+                    <option value="">Без сортировки</option>
+                    <option value="asc" {% if price_sort == 'asc' %}selected{% endif %}>Сначала дешёвые</option>
+                    <option value="desc" {% if price_sort == 'desc' %}selected{% endif %}>Сначала дорогие</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-semibold"><i class="bi bi-archive"></i> Наличие</label>
+                <select name="qty" class="form-select">
+                    <option value="">Все</option>
+                    <option value="in_stock" {% if qty_filter == 'in_stock' %}selected{% endif %}>В наличии</option>
+                    <option value="out" {% if qty_filter == 'out' %}selected{% endif %}>Нет в наличии</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1">
+                    <i class="bi bi-funnel"></i> Фильтр
+                </button>
+                <a href="{% url 'shop:products_list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle"></i> Сброс
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle shadow-sm bg-white">
+        <!-- <thead class="table-light">
+            <tr>
+                <th style="width: 130px;" class="text-center">Фото</th>
+                <th>Информация о товаре</th>
+                <th style="width: 130px;" class="text-center">Действующая скидка</th>
+                {% if user_name %}
+                <th style="width: 80px;" class="text-center"></th>
+                {% endif %}
+            </tr>
+        </thead> -->
+        <tbody>
+            {% for product in products %}
+            <tr class="{% if product.quantity == 0 %}table-secondary{% endif %}">
+                <td class="text-center p-2">
+                    {% if product.image_path %}
+                        <img src="/media/products/{{ product.image_path }}" alt="{{ product.name }}" style="max-width: 110px; max-height: 110px; object-fit: contain;">
+                    {% else %}
+                        <img src="/media/icons/picture.png" alt="Нет фото" style="max-width: 110px; max-height: 110px; object-fit: contain; opacity: 0.5;">
+                    {% endif %}
+                </td>
+                <td class="p-3">
+                    <div class="fw-bold fs-6 mb-1">
+                        <span class="text-primary">{{ product.category.name }}</span> | {{ product.name }}
+                    </div>
+                    <div class="text-muted small mb-1">Описание товара: {{ product.description }}</div>
+                    <div class="small mb-1">Производитель: <strong>{{ product.manufacturer }}</strong></div>
+                    <div class="small mb-1">Поставщик: <strong>{{ product.supplier.name }}</strong></div>
+                    <div class="small mb-1">Цена:
+                        {% if product.discount > 0 %}
+                            <span class="text-decoration-line-through text-muted">{{ product.price }} ₽</span>
+                            <span class="text-success fw-bold">{{ product.final_price|floatformat:2 }} ₽</span>
+                        {% else %}
+                            <strong>{{ product.price }} ₽</strong>
+                        {% endif %}
+                    </div>
+                    <div class="small mb-1">Единица измерения: {{ product.unit }}</div>
+                    <div class="small">Количество на складе:
+                        {% if product.quantity > 0 %}
+                            <span class="badge bg-success">{{ product.quantity }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">0</span>
+                        {% endif %}
+                    </div>
+                </td>
+                <td class="text-center">
+                    {% if product.discount > 0 %}
+                        <span class="badge bg-danger fs-6 px-3 py-2">-{{ product.discount }}%</span>
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                </td>
+                {% if user_name %}
+                <td class="text-center">
+                    <a href="{% url 'shop:product_edit' product.pk %}" class="btn btn-outline-primary btn-sm" title="Редактировать">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                </td>
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center py-5 text-muted">
+                    <i class="bi bi-inbox display-1 d-block mb-3"></i>
+                    <h5>Товары не найдены</h5>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
