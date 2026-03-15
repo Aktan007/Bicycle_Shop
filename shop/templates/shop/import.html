@@ -1,0 +1,124 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Импорт документов{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="mb-0"><i class="bi bi-file-earmark-arrow-up"></i> Загрузка документа</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="doc_type" class="form-label fw-semibold">
+                            <i class="bi bi-list-ul"></i> Тип документа
+                        </label>
+                        <select name="doc_type" id="doc_type" class="form-select">
+                            <option value="auto">Определить автоматически</option>
+                            <option value="products">Товары</option>
+                            <option value="users">Пользователи</option>
+                            <option value="orders">Заказы</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="document" class="form-label fw-semibold">
+                            <i class="bi bi-upload"></i> Файл документа
+                        </label>
+                        <input type="file" class="form-control" id="document" name="document"
+                               accept=".csv,.xlsx" required>
+                        <div class="form-text">Поддерживаемые форматы: <strong>CSV</strong> и <strong>XLSX</strong></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        <i class="bi bi-cloud-upload"></i> Импортировать
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mt-4 mt-lg-0">
+        <div class="card shadow">
+            <div class="card-header bg-secondary text-white py-3">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Требования к форматам файлов</h5>
+            </div>
+            <div class="card-body p-4">
+
+                <h6 class="fw-bold text-primary mb-2"><i class="bi bi-bicycle"></i> Товары</h6>
+                <p class="small text-muted mb-1">Файл: <code>Tovar.csv</code> / <code>Tovar.xlsx</code></p>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered small">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Колонка</th>
+                                <th>Описание</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Артикул</td></tr>
+                            <tr><td>2</td><td>Наименование товара</td></tr>
+                            <tr><td>3</td><td>Единица измерения</td></tr>
+                            <tr><td>4</td><td>Цена</td></tr>
+                            <tr><td>5</td><td>Поставщик</td></tr>
+                            <tr><td>6</td><td>Производитель</td></tr>
+                            <tr><td>7</td><td>Категория товара</td></tr>
+                            <tr><td>8</td><td>Действующая скидка (%)</td></tr>
+                            <tr><td>9</td><td>Кол-во на складе</td></tr>
+                            <tr><td>10</td><td>Описание товара</td></tr>
+                            <tr><td>11</td><td>Фото (имя файла)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h6 class="fw-bold text-primary mb-2"><i class="bi bi-people"></i> Пользователи</h6>
+                <p class="small text-muted mb-1">Файл: <code>user_import.csv</code> / <code>user_import.xlsx</code></p>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered small">
+                        <thead class="table-light">
+                            <tr><th>Колонка</th><th>Описание</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Роль сотрудника</td></tr>
+                            <tr><td>2</td><td>ФИО</td></tr>
+                            <tr><td>3</td><td>Логин</td></tr>
+                            <tr><td>4</td><td>Пароль</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h6 class="fw-bold text-primary mb-2"><i class="bi bi-bag-check"></i> Заказы</h6>
+                <p class="small text-muted mb-1">Файл: <code>Заказ_import.csv</code> / <code>Заказ_import.xlsx</code></p>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered small">
+                        <thead class="table-light">
+                            <tr><th>Колонка</th><th>Описание</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Номер заказа</td></tr>
+                            <tr><td>2</td><td>Артикул заказа</td></tr>
+                            <tr><td>3</td><td>Дата заказа (ДД.ММ.ГГГГ)</td></tr>
+                            <tr><td>4</td><td>Дата доставки (ДД.ММ.ГГГГ)</td></tr>
+                            <tr><td>5</td><td>Адрес пункта выдачи</td></tr>
+                            <tr><td>6</td><td>ФИО клиента</td></tr>
+                            <tr><td>7</td><td>Код для получения</td></tr>
+                            <tr><td>8</td><td>Статус заказа</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="alert alert-info small mt-3 mb-0">
+                    <i class="bi bi-lightbulb"></i>
+                    <strong>Разделитель для CSV:</strong> точка с запятой <code>;</code><br>
+                    <strong>Кодировка CSV:</strong> UTF-8<br>
+                    <strong>Первая строка</strong> — заголовок (пропускается при импорте)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
